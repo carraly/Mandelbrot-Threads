@@ -1,5 +1,9 @@
 #ifndef HEADER_H
 #define HEADER_H
+#define LEFT_LIMIT -2.0
+#define RIGHT_LIMIT 1.0
+#define TOP_LIMIT 1.5
+#define BOTTOM_LIMIT -1.5
 
 #include <stdio.h>
 #include <stdlib.h>
