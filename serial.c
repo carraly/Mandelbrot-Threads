@@ -1,16 +1,26 @@
 #include "header.h"
+#include <stdlib.h>
 
 void mandelbrot_serial(int width, int height, int num_interactions) {
     struct timespec start, end;
 
-    // Trocar por lista dinâmica dps
-    double vertical_positions[height];
+    double *vertical_positions = (double*) malloc(height * sizeof(double));
+
+    if (vertical_positions == NULL) {
+        fprintf(stderr, "Vertical positions malloc failed");
+        exit(EXIT_FAILURE);
+    }
     double increment = (TOP_LIMIT-BOTTOM_LIMIT)/(height);
     for (int i = 0; i < height; i++) {
         vertical_positions[i] = TOP_LIMIT - (i * increment);
     }
     
-    double horizontal_positions[width];
+    double *horizontal_positions = (double*) malloc(height * sizeof(double));
+
+    if (horizontal_positions == NULL) {
+        fprintf(stderr, "Horizontal positions malloc failed");
+        exit(EXIT_FAILURE);
+    }
     increment = (RIGHT_LIMIT-LEFT_LIMIT)/(width);
     for (int i = 0; i < width; i++) {
         horizontal_positions[i] = LEFT_LIMIT + (i * increment);
