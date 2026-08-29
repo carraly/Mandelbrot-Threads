@@ -32,6 +32,7 @@ void mandelbrot_serial(int width, int height, int num_interactions) {
 
     clock_gettime(CLOCK_MONOTONIC, &start);
 
+    int matrix[height][width];
     double normalize = 255.0 / num_interactions;
     
     for (int i = 0; i < height; i++) {
@@ -48,16 +49,23 @@ void mandelbrot_serial(int width, int height, int num_interactions) {
                 z_real = temp_real;
                 cont++;
             }
-            int normalized_cont = (int)(cont * normalize + 0.4); // 0.4 para arredondar para cima
-            fprintf(file, "%d ", normalized_cont);
+            int normalized_cont = (int)(cont * normalize + 0.001); // 0.001 para compensar falha de soma
+            matrix[i][j] = normalized_cont;
         }
-    fprintf(file, "\n");
     }
 
     clock_gettime(CLOCK_MONOTONIC, &end);
     double elapsed_time = (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec) / 1e9;
     fprintf(time_file, "Serial: %fs\n", elapsed_time);
 
-    fclose(file);
     fclose(time_file);
+
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            fprintf(file, "%d ", matrix[i][j]);
+        }
+    fprintf(file, "\n");
+    }
+
+    fclose(file);
 }
