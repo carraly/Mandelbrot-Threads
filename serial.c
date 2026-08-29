@@ -12,7 +12,7 @@ void mandelbrot_serial(int width, int height, int num_interactions) {
     
     check_file_errors(file);
 
-    FILE* time_file = fopen("times.txt", "a");
+    FILE* time_file = fopen("times.txt", "w");
     
     check_file_errors(time_file);
 
