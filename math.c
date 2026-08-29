@@ -20,9 +20,9 @@ void define_positions(double *vertical_positions, double *horizontal_positions, 
     }
 }
 
-void alocate_matrix(int **matrix, int width, int height) {
+void allocate_matrix(int **matrix, int width, int height) {
     check_matrix_errors(matrix);
-    
+
     for (int i = 0; i < height; i++) {
         matrix[i] = (int*) malloc(width * sizeof(int));
         if (matrix[i] == NULL) {

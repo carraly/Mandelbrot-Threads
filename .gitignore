@@ -56,11 +56,9 @@ dkms.conf
 *.dwo
 
 .vscode
+.clangd
 
 # output files
 evidencias.log
-mandelbrot_vchlm_serial.pgm
-mandelbrot_vchlm_openmp.pgm
-mandelbrot_vchlm_pthreads1.pgm
-mandelbrot_vchlm_pthreads2.pgm
-times.txt
+*.pgm
+*.txt
