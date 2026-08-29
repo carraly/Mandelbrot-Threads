@@ -48,7 +48,7 @@ void check_start_errors(int argc, char *argv[], int *width, int *height, int *nu
         fprintf(stderr, "Invalid height: should be higher than 0\n");
         exit(EXIT_FAILURE);
     }
-    *height = temp_height;
+    *height = (int)temp_height;
 
     errno = 0;
     long temp_num_interactions = strtol(argv[3], &end, 10);
@@ -69,7 +69,7 @@ void check_start_errors(int argc, char *argv[], int *width, int *height, int *nu
         fprintf(stderr, "Invalid amount of interactions: should be higher than 0\n");
         exit(EXIT_FAILURE);
     }
-    *num_interactions = temp_num_interactions;
+    *num_interactions = (int)temp_num_interactions;
 
     errno = 0;
     long temp_num_threads = strtol(argv[4], &end, 10);
@@ -90,7 +90,7 @@ void check_start_errors(int argc, char *argv[], int *width, int *height, int *nu
         fprintf(stderr, "Invalid amount of threads: should be higher than 0\n");
         exit(EXIT_FAILURE);
     }
-    *num_threads = temp_num_threads;
+    *num_threads = (int)temp_num_threads;
 }
 
 void check_file_errors(FILE *file) {
