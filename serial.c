@@ -1,5 +1,4 @@
 #include "header.h"
-#include <stdlib.h>
 
 void mandelbrot_serial(int width, int height, int num_interactions) {
     struct timespec start, end;
@@ -7,7 +6,7 @@ void mandelbrot_serial(int width, int height, int num_interactions) {
     double *vertical_positions = (double*) malloc(height * sizeof(double));
 
     if (vertical_positions == NULL) {
-        fprintf(stderr, "Vertical positions malloc failed");
+        fprintf(stderr, "Vertical positions malloc failed\n");
         exit(EXIT_FAILURE);
     }
     double increment = (TOP_LIMIT-BOTTOM_LIMIT)/(height);
@@ -15,10 +14,10 @@ void mandelbrot_serial(int width, int height, int num_interactions) {
         vertical_positions[i] = TOP_LIMIT - (i * increment);
     }
     
-    double *horizontal_positions = (double*) malloc(height * sizeof(double));
+    double *horizontal_positions = (double*) malloc(width * sizeof(double));
 
     if (horizontal_positions == NULL) {
-        fprintf(stderr, "Horizontal positions malloc failed");
+        fprintf(stderr, "Horizontal positions malloc failed\n");
         exit(EXIT_FAILURE);
     }
     increment = (RIGHT_LIMIT-LEFT_LIMIT)/(width);
@@ -29,20 +28,33 @@ void mandelbrot_serial(int width, int height, int num_interactions) {
     FILE* file = fopen("mandelbrot_vchlm_serial.pgm", "w");
     
     if (file == NULL) {
-        fprintf(stderr, "Fail opening file");
+        fprintf(stderr, "Fail opening file\n");
         exit(EXIT_FAILURE);
     }
 
     FILE* time_file = fopen("times.txt", "a");
     
     if (time_file == NULL) {
-        fprintf(stderr, "Fail opening file");
+        fprintf(stderr, "Fail opening file\n");
         exit(EXIT_FAILURE);
     }
 
     clock_gettime(CLOCK_MONOTONIC, &start);
 
-    int matrix[height][width];
+
+    int **matrix = (int**) malloc(height * sizeof(int*));
+    if (matrix == NULL) {
+        fprintf(stderr, "Matrix rows malloc failed\n");
+        exit(EXIT_FAILURE);
+    }
+    for (int i = 0; i < height; i++) {
+        matrix[i] = (int*) malloc(width * sizeof(int));
+        if (matrix[i] == NULL) {
+            fprintf(stderr, "Matrix column %d malloc failed\n", i);
+            exit(EXIT_FAILURE);
+        }
+    }
+
     double normalize = 255.0 / num_interactions;
     
     for (int i = 0; i < height; i++) {
@@ -72,10 +84,20 @@ void mandelbrot_serial(int width, int height, int num_interactions) {
 
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
-            fprintf(file, "%d ", matrix[i][j]);
+            if (j != width-1) {
+                fprintf(file, "%d ", matrix[i][j]);
+            }else {
+                fprintf(file, "%d", matrix[i][j]);
+            }
         }
-    fprintf(file, "\n");
+        free(matrix[i]);
+        if (i != height-1) {
+            fprintf(file, "\n");
+        }
     }
+    free(matrix);
+    free(vertical_positions);
+    free(horizontal_positions);
 
     fclose(file);
 }
