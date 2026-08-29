@@ -113,7 +113,11 @@ void mandelbrot_pthreads2(int width, int height, int num_interactions, int num_t
     }
 
     for (int i = 0; i < num_threads; i++) {
-        pthread_join(array_ids[i], NULL);
+        int ret_value = pthread_join(array_ids[i], NULL);
+        if (ret_value != 0) {
+            fprintf(stderr, "Failed returning threads\n");
+            exit(EXIT_FAILURE); 
+        }
     }
 
     free(array_args);
