@@ -35,6 +35,7 @@
 *.i*86
 *.x86_64
 *.hex
+mandelbrot
 
 # Debug files
 *.dSYM/
@@ -55,4 +56,11 @@ dkms.conf
 *.dwo
 
 .vscode
+
+# output files
 evidencias.log
+mandelbrot_vchlm_serial.pgm
+mandelbrot_vchlm_openmp.pgm
+mandelbrot_vchlm_pthreads1.pgm
+mandelbrot_vchlm_pthreads2.pgm
+times.txt

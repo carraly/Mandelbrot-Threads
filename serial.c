@@ -16,14 +16,14 @@ void mandelbrot_serial(int width, int height, int num_interactions) {
         horizontal_positions[i] = LEFT_LIMIT + (i * increment);
     }
     
-    FILE* file = fopen("mandelbrot_login_serial.pgm", "w");
+    FILE* file = fopen("mandelbrot_vchlm_serial.pgm", "w");
     
     if (file == NULL) {
         fprintf(stderr, "Fail opening file");
         exit(EXIT_FAILURE);
     }
 
-    FILE* time_file = fopen("times.txt", "w");
+    FILE* time_file = fopen("times.txt", "a");
     
     if (time_file == NULL) {
         fprintf(stderr, "Fail opening file");
