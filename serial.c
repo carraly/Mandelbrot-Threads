@@ -20,7 +20,7 @@ void mandelbrot_serial(int width, int height, int num_interactions) {
 
 
     int **matrix = (int**) malloc(height * sizeof(int*));
-    alocate_matrix(matrix, width, height);
+    allocate_matrix(matrix, width, height);
 
     double normalize = 255.0 / num_interactions;
     

@@ -1,5 +1,4 @@
 #include "header.h"
-#include <stdio.h>
 
 void check_start_errors(int argc, char *argv[], int *width, int *height, int *num_interactions, int *num_threads) {
     if (argc != 5) {

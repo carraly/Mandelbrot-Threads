@@ -18,7 +18,7 @@ void check_matrix_errors(int **matrix);
 
 // math.c
 void define_positions(double *vertical_positions, double *horizontal_positions, int width, int height);
-void alocate_matrix(int **matrix, int width, int height);
+void allocate_matrix(int **matrix, int width, int height);
 
 // serial.c
 void mandelbrot_serial(int width, int height, int num_interactions);
