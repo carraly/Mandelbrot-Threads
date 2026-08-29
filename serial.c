@@ -1,8 +1,8 @@
 #include "header.h"
-#include <stdio.h>
-#include <stdlib.h>
 
 void mandelbrot_serial(int width, int height, int num_interactions) {
+    struct timespec start, end;
+
     // Trocar por lista dinâmica dps
     double vertical_positions[height];
     double increment = (TOP_LIMIT-BOTTOM_LIMIT)/(height);
@@ -22,6 +22,15 @@ void mandelbrot_serial(int width, int height, int num_interactions) {
         fprintf(stderr, "Fail opening file");
         exit(EXIT_FAILURE);
     }
+
+    FILE* time_file = fopen("times.txt", "w");
+    
+    if (time_file == NULL) {
+        fprintf(stderr, "Fail opening file");
+        exit(EXIT_FAILURE);
+    }
+
+    clock_gettime(CLOCK_MONOTONIC, &start);
 
     double normalize = 255.0 / num_interactions;
     
@@ -44,4 +53,11 @@ void mandelbrot_serial(int width, int height, int num_interactions) {
         }
     fprintf(file, "\n");
     }
+
+    clock_gettime(CLOCK_MONOTONIC, &end);
+    double elapsed_time = (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec) / 1e9;
+    fprintf(time_file, "Serial: %fs\n", elapsed_time);
+
+    fclose(file);
+    fclose(time_file);
 }
