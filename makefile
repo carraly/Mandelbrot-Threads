@@ -1,6 +1,6 @@
 CFLAGS = -Wall -Wextra -g
 
-processflow: main.o serial.o errors.o
+processflow: main.o serial.o errors.o math.o
 	gcc $(CFLAGS) -o mandelbrot $^
 
 %.o: %.c header.h

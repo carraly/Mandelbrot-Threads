@@ -1,8 +1,9 @@
 #include "header.h"
+#include <stdio.h>
 
 void check_start_errors(int argc, char *argv[], int *width, int *height, int *num_interactions, int *num_threads) {
     if (argc != 5) {
-        fprintf(stderr, "Unexpected amount of arguments: expected 4");
+        fprintf(stderr, "Unexpected amount of arguments: expected 4\n");
         exit(EXIT_FAILURE);
     }
 
@@ -12,19 +13,19 @@ void check_start_errors(int argc, char *argv[], int *width, int *height, int *nu
     long temp_width = strtol(argv[1], &end, 10);
 
     if (errno == ERANGE || temp_width > INT_MAX || temp_width < INT_MIN) {
-        fprintf(stderr, "Width value out of range for integer type");
+        fprintf(stderr, "Width value out of range for integer type\n");
         exit(EXIT_FAILURE);
 
     }else if (end == argv[1]) {
-        fprintf(stderr, "Width conversion to integer failed");
+        fprintf(stderr, "Width conversion to integer failed\n");
         exit(EXIT_FAILURE);
 
     }else if (*end != '\0') {
-        fprintf(stderr, "Width conversion to integer failed partially");
+        fprintf(stderr, "Width conversion to integer failed partially\n");
         exit(EXIT_FAILURE);
 
-    }else if (*width < 1) {
-        fprintf(stderr, "Invalid width: should be higher than 0");
+    }else if (temp_width < 1) {
+        fprintf(stderr, "Invalid width: should be higher than 0\n");
         exit(EXIT_FAILURE);
     }
     *width = (int)temp_width;
@@ -33,19 +34,19 @@ void check_start_errors(int argc, char *argv[], int *width, int *height, int *nu
     long temp_height = strtol(argv[2], &end, 10);
 
     if (errno == ERANGE || temp_height > INT_MAX || temp_height < INT_MIN) {
-        fprintf(stderr, "Height value out of range for integer type");
+        fprintf(stderr, "Height value out of range for integer type\n");
         exit(EXIT_FAILURE);
 
     }else if (end == argv[2]) {
-        fprintf(stderr, "Height conversion to integer failed");
+        fprintf(stderr, "Height conversion to integer failed\n");
         exit(EXIT_FAILURE);
 
     }else if (*end != '\0') {
-        fprintf(stderr, "Width conversion to integer failed partially");
+        fprintf(stderr, "Height conversion to integer failed partially\n");
         exit(EXIT_FAILURE);
 
-    }else if (*height < 1) {
-        fprintf(stderr, "Invalid height: should be higher than 0");
+    }else if (temp_height < 1) {
+        fprintf(stderr, "Invalid height: should be higher than 0\n");
         exit(EXIT_FAILURE);
     }
     *height = temp_height;
@@ -54,19 +55,19 @@ void check_start_errors(int argc, char *argv[], int *width, int *height, int *nu
     long temp_num_interactions = strtol(argv[3], &end, 10);
 
     if (errno == ERANGE || temp_num_interactions > INT_MAX || temp_num_interactions < INT_MIN) {
-        fprintf(stderr, "Amount of interactions out of range for integer type");
+        fprintf(stderr, "Amount of interactions out of range for integer type\n");
         exit(EXIT_FAILURE);
 
     }else if (end == argv[3]) {
-        fprintf(stderr, "Amount of interactions conversion to integer failed");
+        fprintf(stderr, "Amount of interactions conversion to integer failed\n");
         exit(EXIT_FAILURE);
 
     }else if (*end != '\0') {
-        fprintf(stderr, "Width conversion to integer failed partially");
+        fprintf(stderr, "Amount of interactions conversion to integer failed partially\n");
         exit(EXIT_FAILURE);
 
-    }else if (*num_interactions < 1) {
-        fprintf(stderr, "Invalid amount of interactions: should be higher than 0");
+    }else if (temp_num_interactions < 1) {
+        fprintf(stderr, "Invalid amount of interactions: should be higher than 0\n");
         exit(EXIT_FAILURE);
     }
     *num_interactions = temp_num_interactions;
@@ -74,21 +75,35 @@ void check_start_errors(int argc, char *argv[], int *width, int *height, int *nu
     errno = 0;
     long temp_num_threads = strtol(argv[4], &end, 10);
 
-    if (errno == ERANGE || temp_num_interactions > INT_MAX || temp_num_interactions < INT_MIN) {
-        fprintf(stderr, "Amount of threads out of range for integer type");
+    if (errno == ERANGE || temp_num_threads > INT_MAX || temp_num_threads < INT_MIN) {
+        fprintf(stderr, "Amount of threads out of range for integer type\n");
         exit(EXIT_FAILURE);
 
     }else if (end == argv[4]) {
-        fprintf(stderr, "Amount of threads conversion to integer failed");
+        fprintf(stderr, "Amount of threads conversion to integer failed\n");
         exit(EXIT_FAILURE);
 
     }else if (*end != '\0') {
-        fprintf(stderr, "Width conversion to integer failed partially");
+        fprintf(stderr, "Amount of threads conversion to integer failed partially\n");
         exit(EXIT_FAILURE);
 
-    }else if (*num_threads < 1) {
-        fprintf(stderr, "Invalid amount of threads: should be higher than 0");
+    }else if (temp_num_threads < 1) {
+        fprintf(stderr, "Invalid amount of threads: should be higher than 0\n");
         exit(EXIT_FAILURE);
     }
     *num_threads = temp_num_threads;
+}
+
+void check_file_errors(FILE *file) {
+    if (file == NULL) {
+        fprintf(stderr, "Failed opening file\n");
+        exit(EXIT_FAILURE);
+    }
+}
+
+void check_matrix_errors(int **matrix) {
+    if (matrix == NULL) {
+        fprintf(stderr, "Matrix rows malloc failed\n");
+        exit(EXIT_FAILURE);
+    }
 }
