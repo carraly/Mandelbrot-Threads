@@ -87,10 +87,14 @@ void mandelbrot_pthreads2(int width, int height, int num_interactions, int num_t
             args.amount_indexes = exec_per_thread;
         }
         
-        args.indexes = (int*) malloc(args.amount_indexes * sizeof(int));
-        if (args.indexes == NULL) {
-            fprintf(stderr, "Failed malloc\n");
-            exit(EXIT_FAILURE);
+        if (args.amount_indexes != 0) {
+            args.indexes = (int*) malloc(args.amount_indexes * sizeof(int));
+            if (args.indexes == NULL) {
+                fprintf(stderr, "Failed malloc\n");
+                exit(EXIT_FAILURE);
+            }
+        }else {
+            args.indexes = NULL;
         }
 
         for (int j = 0; j < args.amount_indexes; j++) {
