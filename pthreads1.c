@@ -59,6 +59,18 @@ void mandelbrot_pthreads1(int width, int height, int num_interactions, int num_t
     double normalize = 255.0 / num_interactions;
     double exec_per_thread = (double)height / num_threads;
 
+    ArgsPthreads* array_args = (ArgsPthreads*)malloc(num_threads * sizeof(ArgsPthreads));
+    if (array_args == NULL) {
+        fprintf(stderr, "Failed malloc\n");
+        exit(EXIT_FAILURE);
+    }
+
+    pthread_t* array_ids = (pthread_t*)malloc(num_threads * sizeof(pthread_t));
+    if (array_ids == NULL) {
+        fprintf(stderr, "Failed malloc\n");
+        exit(EXIT_FAILURE);
+    }
+
     for (int i = 0; i < num_threads; i++) {
         ArgsPthreads args;
         args.vertical_positions = vertical_positions;
@@ -68,21 +80,31 @@ void mandelbrot_pthreads1(int width, int height, int num_interactions, int num_t
         args.num_interactions = num_interactions;
         args.width = width;
         args.start = (int)(i * exec_per_thread);
-
+        
         if (i == num_threads-1 && (int)((i+1) * exec_per_thread) < (i+1) * exec_per_thread) {
             args.end = height;
-
+            
         }else {
             args.end = (int)((i+1) * exec_per_thread);
         }
-        threads_calculate_matrix(&args);
+        array_args[i] = args;
+
+        if (pthread_create(&array_ids[i], NULL, threads_calculate_matrix, (void*)&array_args[i]) != 0) {
+            fprintf(stderr, "Failed creating threads\n");
+            exit(EXIT_FAILURE); 
+        }
     }
 
+    for (int i = 0; i < num_threads; i++) {
+        pthread_join(array_ids[i], NULL);
+    }
 
+    free(array_args);
+    free(array_ids);
 
     clock_gettime(CLOCK_MONOTONIC, &end);
     double elapsed_time = (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec) / 1e9;
-    fprintf(time_file, "Phreads1: %fs\n", elapsed_time);
+    fprintf(time_file, "Pthreads1: %fs\n", elapsed_time);
 
     fclose(time_file);
 

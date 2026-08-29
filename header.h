@@ -11,6 +11,7 @@
 #include <time.h>
 #include <limits.h>
 #include <omp.h>
+#include <pthread.h>
 
 // errors.c
 void check_start_errors(int argc, char *argv[], int *width, int *height, int *num_interactions, int *num_threads);
