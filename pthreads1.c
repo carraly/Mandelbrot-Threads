@@ -7,12 +7,25 @@ typedef struct ArgsPthreads1 {
     int** matrix;
     int num_interactions;
     int width;
+    int height;
     int start;
     int end;
+    char* output;
 } ArgsPthreads1;
 
 void *pthreads1_calculate_matrix(void* args_void) {
     ArgsPthreads1* args = (ArgsPthreads1*) args_void;
+
+    int rows = args->end - args->start;
+    size_t buffer_size = (size_t)rows * (args->width * 4 + 2) + 1;
+    args->output = (char*) malloc(buffer_size * sizeof(char));
+    if (args->output == NULL) {
+        fprintf(stderr, "Failed malloc for thread output buffer\n");
+        exit(EXIT_FAILURE);
+    }
+
+    int offset = 0;
+
     for (int i = args->start; i < args->end; i++) {
         for (int j = 0; j < args->width; j++) {
             int cont = 0;
@@ -29,8 +42,18 @@ void *pthreads1_calculate_matrix(void* args_void) {
             }
             int normalized_cont = (int)(cont * args->normalize + 0.001); // 0.001 para compensar falha de soma
             args->matrix[i][j] = normalized_cont;
+
+            if (j != args->width - 1) {
+                offset += sprintf(args->output + offset, "%d ", normalized_cont);
+            } else {
+                offset += sprintf(args->output + offset, "%d", normalized_cont);
+            }
+        }
+        if (i != args->height - 1) {
+            offset += sprintf(args->output + offset, "\n");
         }
     }
+
     return (void*)args;
 }
 
@@ -79,6 +102,7 @@ void mandelbrot_pthreads1(int width, int height, int num_interactions, int num_t
         args.matrix = matrix;
         args.num_interactions = num_interactions;
         args.width = width;
+        args.height = height;
         args.start = (int)(i * exec_per_thread);
         
         if (i == num_threads-1 && (int)((i+1) * exec_per_thread) < (i+1) * exec_per_thread) {
@@ -103,29 +127,24 @@ void mandelbrot_pthreads1(int width, int height, int num_interactions, int num_t
         }
     }
 
-    free(array_args);
-    free(array_ids);
-
     clock_gettime(CLOCK_MONOTONIC, &end);
     double elapsed_time = (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec) / 1e9;
     fprintf(time_file, "Pthreads1: %fs\n", elapsed_time);
 
     fclose(time_file);
 
+    for (int i = 0; i < num_threads; i++) {
+        fprintf(file, "%s", array_args[i].output);
+        free(array_args[i].output);
+    }
+
     for (int i = 0; i < height; i++) {
-        for (int j = 0; j < width; j++) {
-            if (j != width-1) {
-                fprintf(file, "%d ", matrix[i][j]);
-            }else {
-                fprintf(file, "%d", matrix[i][j]);
-            }
-        }
         free(matrix[i]);
-        if (i != height-1) {
-            fprintf(file, "\n");
-        }
     }
     free(matrix);
+
+    free(array_args);
+    free(array_ids);
     free(vertical_positions);
     free(horizontal_positions);
 
